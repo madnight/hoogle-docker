@@ -1,0 +1,14 @@
+sudo: required
+dist: trusty
+
+services:
+  - docker
+
+before_install:
+  - docker build -t hoogle .
+
+after_script:
+  - wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+  - heroku plugins:install heroku-container-registry
+  - docker login --email=_ --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com
+  - heroku container:push web --app hoogle
